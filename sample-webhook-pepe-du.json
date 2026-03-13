@@ -1,0 +1,40 @@
+{
+  "content": null,
+  "embeds": [
+    {
+      "title": ":green_circle: DU 4小時 觸發",
+      "description": "偵測到 DU 身分（SDU / WDU）",
+      "color": 5763719,
+      "fields": [
+        {
+          "name": "標的",
+          "value": "PEPEUSDT.P",
+          "inline": true
+        },
+        {
+          "name": "週期",
+          "value": "4H",
+          "inline": true
+        },
+        {
+          "name": "觸發時間",
+          "value": "2026-03-14 16:00:00",
+          "inline": false
+        },
+        {
+          "name": "收盤價",
+          "value": "0.00000987",
+          "inline": true
+        },
+        {
+          "name": "觸發依據",
+          "value": "DU 身分成立（SDU / WDU）",
+          "inline": false
+        }
+      ],
+      "footer": {
+        "text": "士弘多維流向 | 4H DU觸發卡片"
+      }
+    }
+  ]
+}

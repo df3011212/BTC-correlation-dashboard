@@ -1,0 +1,40 @@
+{
+  "content": null,
+  "embeds": [
+    {
+      "title": ":red_circle: DD 3小時 觸發",
+      "description": "偵測到 DD 身分（SDD / WDD）",
+      "color": 15158332,
+      "fields": [
+        {
+          "name": "標的",
+          "value": "WIFUSDT.P",
+          "inline": true
+        },
+        {
+          "name": "週期",
+          "value": "3H",
+          "inline": true
+        },
+        {
+          "name": "觸發時間",
+          "value": "2026-03-14 15:00:00",
+          "inline": false
+        },
+        {
+          "name": "收盤價",
+          "value": "2.1021",
+          "inline": true
+        },
+        {
+          "name": "觸發依據",
+          "value": "DD 身分成立（SDD / WDD）",
+          "inline": false
+        }
+      ],
+      "footer": {
+        "text": "士弘多維流向 | 3H DD觸發卡片"
+      }
+    }
+  ]
+}

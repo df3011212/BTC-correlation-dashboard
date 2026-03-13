@@ -1,0 +1,91 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = Model.PageTitle;
+}
+
+<section class="hero-panel correlation-hero">
+    <div class="hero-copy">
+        <p class="eyebrow">Bitget USDT Perpetual</p>
+        <h1>@Model.PageTitle</h1>
+        <p class="hero-description">
+            這個頁面會每 15 分鐘自動抓 Bitget 的 USDT 永續合約資料，使用 20 根 15 分鐘 K 線計算
+            `BTCUSDT.P` 與其他幣種的收盤價相關係數，並保留相關係數介於 `0.70 ~ 1.00`、且和 BTC 最新方向一致的標的。
+        </p>
+        <div class="hero-badges">
+            <span class="hero-chip">@Model.InitialSnapshot.WindowLabel</span>
+            <span class="hero-chip">相關係數 @Model.InitialSnapshot.CorrelationRangeLabel</span>
+            <span class="hero-chip">每 @Model.InitialSnapshot.RefreshIntervalMinutes 分鐘更新</span>
+        </div>
+    </div>
+    <div class="hero-spotlight">
+        <span class="spotlight-label">BTC 最新 15 分鐘</span>
+        <strong id="btc-direction-pill" class="direction-pill direction-pill--@Model.InitialSnapshot.BtcDirection">
+            @Model.InitialSnapshot.BtcDirectionLabel
+        </strong>
+        <div id="btc-change-value" class="spotlight-value">@Model.InitialSnapshot.BasePriceChangeText</div>
+        <div class="spotlight-meta">
+            最後價格
+            <strong id="btc-last-close">@Model.InitialSnapshot.BaseLastCloseText</strong>
+        </div>
+    </div>
+</section>
+
+<section class="status-strip correlation-strip">
+    <div>
+        <span class="status-label">最後更新</span>
+        <strong id="last-updated-label">@Model.InitialSnapshot.UpdatedAtLocalText</strong>
+    </div>
+    <div>
+        <span class="status-label">上次成功更新</span>
+        <strong id="last-success-label">@Model.InitialSnapshot.LastSuccessfulRefreshLocalText</strong>
+    </div>
+    <div>
+        <span class="status-label">掃描合約數</span>
+        <strong id="scanned-count-label">@Model.InitialSnapshot.TotalSymbolsScanned</strong>
+    </div>
+    <div>
+        <span class="status-label">符合條件數</span>
+        <strong id="matched-count-label">@Model.InitialSnapshot.MatchedCount</strong>
+    </div>
+</section>
+
+<section class="dashboard-shell correlation-shell">
+    <section class="workspace-panel">
+        <div class="panel-heading">
+            <div>
+                <p class="panel-eyebrow">Scan Rule</p>
+                <h2>篩選結果</h2>
+            </div>
+            <div id="direction-rule" class="panel-note">@Model.InitialSnapshot.DirectionRuleText</div>
+        </div>
+
+        <div id="error-banner" class="error-banner" hidden></div>
+
+        <div class="toolbar">
+            <label class="searchbox" for="coin-search">
+                <span>搜尋幣種</span>
+                <input id="coin-search" type="search" placeholder="例如 SOL / PEPE / DOGE" />
+            </label>
+            <div class="refresh-chip-group">
+                <span class="hero-chip">下次排程 <strong id="next-refresh-label">@Model.InitialSnapshot.NextScheduledRefreshLocalText</strong></span>
+                <span class="hero-chip">資料源 <strong>@Model.InitialSnapshot.MarketLabel</strong></span>
+            </div>
+        </div>
+
+        <div id="results-summary" class="results-summary"></div>
+        <div id="correlation-results" class="correlation-grid"></div>
+    </section>
+</section>
+
+<script id="initial-correlation-data" type="application/json">@Html.Raw(Model.InitialSnapshotJson)</script>
+
+@section Scripts {
+    <script>
+        window.correlationDashboardConfig = {
+            apiUrl: "/api/correlation-dashboard",
+            pollMs: 60000
+        };
+    </script>
+    <script src="~/js/correlation-dashboard.js" asp-append-version="true"></script>
+}
