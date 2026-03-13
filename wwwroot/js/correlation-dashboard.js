@@ -79,7 +79,7 @@
     matchedCountLabel.textContent = String(state.snapshot.matchedCount || 0);
     nextRefreshLabel.textContent = state.snapshot.nextScheduledRefreshLocalText || "-";
     directionRuleLabel.textContent = state.snapshot.directionRuleText || "";
-    btcDirectionPill.textContent = state.snapshot.btcDirectionLabel || "等待 BTC 最新方向";
+    btcDirectionPill.textContent = state.snapshot.btcDirectionLabel || "等待 BTC 最新日 K 方向";
     btcDirectionPill.className = `direction-pill direction-pill--${escapeHtml(state.snapshot.btcDirection || "flat")}`;
     btcChangeValue.textContent = state.snapshot.basePriceChangeText || "0.00%";
     btcChangeValue.className = `spotlight-value metric-value is-${getTrendClass(Number(state.snapshot.basePriceChangePercent || 0))}`;
@@ -118,7 +118,7 @@
           </div>
           <div class="result-card-meta">
             <div class="metric">
-              <span class="metric-label">15m 變化</span>
+              <span class="metric-label">日 K 變化</span>
               <span class="metric-value is-${trendClass}">${escapeHtml(item.priceChangeText)}</span>
             </div>
             <div class="metric">

@@ -1,84 +1,56 @@
 # BTCUSDT.P 相關係數網站
 
-這個 ASP.NET Core Razor Pages 專案會把原本的 `find_correlated_coins.py` 邏輯做成網頁版首頁，定時抓取 Bitget USDT 永續合約資料，顯示：
+這個專案現在是：
 
 - 基準：`BTCUSDT.P`
-- K 線週期：`15m`
-- 視窗長度：`20` 根收盤價
+- 比較對象：Bitget 其他 `USDT` 永續合約
+- 比較週期：`1D` 天圖
+- 比較視窗：最近 `20` 根日 K 收盤價
 - 條件：相關係數 `0.70 ~ 1.00`
-- 額外篩選：只保留和 BTC 最新 15 分鐘同方向的標的
-- 自動更新：每 `15` 分鐘
+- 方向條件：只保留和 BTC 最新日 K 同方向的標的
+- 更新排程：每 `15` 分鐘重新抓一次資料
 
 ## 專案位置
 
-`C:\Users\User\Documents\New project\TradingViewWebhookDashboard`
+`C:\Users\User\Documents\Codex專案\相關係數\TradingViewWebhookDashboard`
 
-## 本地執行
+## ASP.NET 網站版
+
+本地執行：
 
 ```powershell
-cd "C:\Users\User\Documents\New project\TradingViewWebhookDashboard"
+cd "C:\Users\User\Documents\Codex專案\相關係數\TradingViewWebhookDashboard"
 dotnet restore
 dotnet run --launch-profile http
 ```
 
-預設本地網址：
-
-`http://localhost:5241`
-
-## 主要設定
-
-設定檔在 [appsettings.json](C:\Users\User\Documents\New project\TradingViewWebhookDashboard\appsettings.json)。
-
-`CorrelationDashboard` 區段目前預設如下：
-
-- `PageTitle`: 首頁標題
-- `BaseSymbol`: 基準合約，預設 `BTCUSDT`
-- `BaseTradingViewSymbol`: 顯示用名稱，預設 `BTCUSDT.P`
-- `Granularity`: K 線週期，預設 `15m`
-- `CandleLimit`: 相關係數視窗長度，預設 `20`
-- `MinCorrelation` / `MaxCorrelation`: 篩選區間
-- `RefreshIntervalMinutes`: 排程更新分鐘數，預設 `15`
-- `MaxParallelRequests`: 同時抓取 Bitget K 線的最大並行數
-- `SnapshotPath`: 快照 JSON 儲存位置
-
-## 測試
-
-```powershell
-cd "C:\Users\User\Documents\New project"
-dotnet test "TradingViewWebhookDashboard.Tests\TradingViewWebhookDashboard.Tests.csproj"
-```
-
-## 上傳到 GitHub
-
-如果你要自己建立 GitHub repo，這組指令可以直接用：
-
-```powershell
-cd "C:\Users\User\Documents\New project"
-git init
-git add .
-git commit -m "Add BTC correlation dashboard"
-git branch -M main
-git remote add origin https://github.com/<你的帳號>/<你的repo>.git
-git push -u origin main
-```
-
-## 自動建置
-
-GitHub Actions 工作流程已放在 [dotnet-correlation-dashboard.yml](C:\Users\User\Documents\New project\.github\workflows\dotnet-correlation-dashboard.yml)，推到 GitHub 後會自動跑 restore、build、test。
+主要設定在 `appsettings.json` 的 `CorrelationDashboard` 區段。
 
 ## GitHub Pages 自動更新版
 
-如果你想要像以前那樣「GitHub 自己每 15 分鐘更新頁面」，這個 repo 現在也可以支援：
+這個 repo 也支援像你之前那樣，直接靠 GitHub 自動更新靜態頁面：
 
-- 工作流程檔：`.github/workflows/update-correlation-pages.yml`
+- 工作流程：`.github/workflows/update-correlation-pages.yml`
 - 更新腳本：`scripts/update_correlation_site.py`
-- 靜態網站輸出：`docs/index.html`
+- 輸出頁面：`docs/index.html`
+- 輸出資料：`docs/correlation-data.json`
+- 代號清單：`docs/hot_symbols.txt`
 
-設定方式：
+GitHub Pages 設定方式：
 
-1. 到 GitHub repo 的 `Settings` -> `Pages`
-2. `Build and deployment` 選 `Deploy from a branch`
-3. Branch 選 `main`
-4. Folder 選 `/docs`
+1. 到 repo 的 `Settings`
+2. 打開 `Pages`
+3. `Source` 選 `Deploy from a branch`
+4. Branch 選 `main`
+5. Folder 選 `/docs`
 
-之後 GitHub Actions 會每 15 分鐘更新一次 `docs/index.html`、`docs/correlation-data.json`、`docs/hot_symbols.txt`，GitHub Pages 也會直接顯示最新內容。
+之後 GitHub Actions 會每 15 分鐘自動更新一次頁面，但內容是用最近 20 根日 K 計算相關係數。
+
+## GitHub Actions
+
+repo 內目前有兩條 workflow：
+
+- `.github/workflows/dotnet-correlation-dashboard.yml`
+  作用：build / test ASP.NET 專案
+- `.github/workflows/update-correlation-pages.yml`
+  作用：每 15 分鐘更新 GitHub Pages 靜態頁面

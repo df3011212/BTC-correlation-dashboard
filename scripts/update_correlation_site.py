@@ -15,7 +15,7 @@ NOJEKYLL_PATH = DOCS_DIR / ".nojekyll"
 BASE_SYMBOL = "BTCUSDT"
 BASE_TRADINGVIEW_SYMBOL = "BTCUSDT.P"
 PRODUCT_TYPE = "usdt-futures"
-GRANULARITY = "15m"
+GRANULARITY = "1D"
 CANDLE_LIMIT = 20
 MIN_CORRELATION = 0.70
 MAX_CORRELATION = 1.00
@@ -139,14 +139,14 @@ def build_payload() -> dict:
     btc_direction = trend_key(base_change)
 
     if btc_direction == "up":
-        direction_label = "BTC 最新 15 分鐘上漲"
-        direction_rule = "只保留和 BTC 最新 15 分鐘同方向上漲，且相關係數介於 0.70 到 1.00 的標的。"
+        direction_label = "BTC 最新日 K 上漲"
+        direction_rule = "只保留和 BTC 最新日 K 同方向上漲，且相關係數介於 0.70 到 1.00 的標的。"
     elif btc_direction == "down":
-        direction_label = "BTC 最新 15 分鐘下跌"
-        direction_rule = "目前 BTC 在下跌，因此列表改為保留和 BTC 最新 15 分鐘同方向下跌，且相關係數介於 0.70 到 1.00 的標的。"
+        direction_label = "BTC 最新日 K 下跌"
+        direction_rule = "目前 BTC 在下跌，因此列表改為保留和 BTC 最新日 K 同方向下跌，且相關係數介於 0.70 到 1.00 的標的。"
     else:
-        direction_label = "BTC 最新 15 分鐘持平"
-        direction_rule = "BTC 最新 15 分鐘幾乎持平，因此本次以相關係數 0.70 到 1.00 為主，不額外限制方向。"
+        direction_label = "BTC 最新日 K 持平"
+        direction_rule = "BTC 最新日 K 幾乎持平，因此本次以相關係數 0.70 到 1.00 為主，不額外限制方向。"
 
     results = []
     for symbol in symbols:
@@ -197,9 +197,9 @@ def build_payload() -> dict:
     next_run = now + timedelta(minutes=15)
 
     return {
-        "title": "BTCUSDT.P 相關係數 (0.7~1.0) BTC漲 同漲",
+        "title": "BTCUSDT.P 相關係數 (0.7~1.0) 日 K",
         "baseTradingViewSymbol": BASE_TRADINGVIEW_SYMBOL,
-        "windowLabel": f"{GRANULARITY} × {CANDLE_LIMIT} 根 K 線",
+        "windowLabel": f"{GRANULARITY} x {CANDLE_LIMIT} 根 K 線",
         "correlationRangeLabel": f"{MIN_CORRELATION:.2f} ~ {MAX_CORRELATION:.2f}",
         "marketLabel": "Bitget USDT 永續合約",
         "updatedAtLocalText": now.strftime("%Y-%m-%d %H:%M:%S"),
@@ -232,7 +232,7 @@ def render_html(data: dict) -> str:
               </div>
               <div class="metrics">
                 <div class="metric">
-                  <span class="label">15m 變化</span>
+                  <span class="label">日 K 變化</span>
                   <strong class="trend-{item['trend']}">{item['priceChangeText']}</strong>
                 </div>
                 <div class="metric">
@@ -254,7 +254,6 @@ def render_html(data: dict) -> str:
         </section>
     """
 
-    error_note = ""
     return f"""<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -409,9 +408,9 @@ def render_html(data: dict) -> str:
         <p class="eyebrow">GitHub Pages Auto Update</p>
         <h1>{data['title']}</h1>
         <p>
-          GitHub Actions 每 15 分鐘自動更新一次。使用 Bitget USDT 永續合約的
-          {data['windowLabel']} 收盤價，計算 {data['baseTradingViewSymbol']} 與其他標的的相關係數，
-          並保留相關係數介於 {data['correlationRangeLabel']}、且和 BTC 最新方向一致的標的。
+          GitHub Actions 每 15 分鐘自動更新一次，但相關係數是用 Bitget USDT 永續合約的
+          {data['windowLabel']} 收盤價，計算 {data['baseTradingViewSymbol']} 與其他標的的日線同步程度，
+          並保留相關係數介於 {data['correlationRangeLabel']}、且和 BTC 最新日 K 方向一致的標的。
         </p>
         <div class="chips">
           <span class="chip">{data['windowLabel']}</span>
@@ -442,7 +441,6 @@ def render_html(data: dict) -> str:
         </div>
         <div class="summary">{data['directionRuleText']}</div>
       </div>
-      {error_note}
       <div class="grid">
         {cards_html}
       </div>

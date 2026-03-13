@@ -3,7 +3,7 @@ namespace TradingViewWebhookDashboard.Models;
 public sealed class CorrelationDashboardOptions
 {
     public const string SectionName = "CorrelationDashboard";
-    public const string DefaultPageTitle = "BTCUSDT.P 相關係數 (0.7~1.0) BTC漲 同漲";
+    public const string DefaultPageTitle = "BTCUSDT.P 相關係數 (0.7~1.0) 日 K";
     public const string DefaultDisplayTimeZoneId = "Asia/Taipei";
 
     public string PageTitle { get; set; } = DefaultPageTitle;
@@ -14,7 +14,7 @@ public sealed class CorrelationDashboardOptions
 
     public string ProductType { get; set; } = "usdt-futures";
 
-    public string Granularity { get; set; } = "15m";
+    public string Granularity { get; set; } = "1D";
 
     public int CandleLimit { get; set; } = 20;
 
